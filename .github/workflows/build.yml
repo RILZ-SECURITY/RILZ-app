@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -15,15 +15,14 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          # Gue hapus libtinfo5 biar gak error lagi
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
-          pip install --user --upgrade buildozer Cython virtualenv
+          sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
+          pip install --user --upgrade buildozer Cython==0.29.33 virtualenv
 
-      - name: Build APK
+      - name: Run Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Paksa buat APK secara manual
-          yes | buildozer android debug
+          # Perintah paling aman buat rakit perdana
+          buildozer android debug || buildozer android debug
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
